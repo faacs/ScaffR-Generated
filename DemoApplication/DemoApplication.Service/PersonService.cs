@@ -1,8 +1,8 @@
 namespace DemoApplication.Service
 {
-    using DemoApplication.Core.Interfaces.Data;
-    using DemoApplication.Core.Interfaces.Service;
-    using DemoApplication.Core.Model;
+    using Core.Interfaces.Data;
+    using Core.Interfaces.Service;
+    using Core.Model;
 
     public partial class PersonService : BaseService<Person>, IPersonService
     {

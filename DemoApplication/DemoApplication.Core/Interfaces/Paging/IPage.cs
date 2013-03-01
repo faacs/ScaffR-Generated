@@ -8,6 +8,6 @@ namespace DemoApplication.Core.Interfaces.Paging
         int PagesCount { get; set; }
         int PageSize { get; set; }
         int Count { get; set; }
-        IEnumerable<T> Entities { get; set; }
+        IList<T> Entities { get; set; }
     }
 }

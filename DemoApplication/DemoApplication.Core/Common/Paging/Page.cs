@@ -10,9 +10,9 @@ namespace DemoApplication.Core.Common.Paging
         public int PagesCount { get; set; }
         public int PageSize { get; set; }
         public int Count { get; set; }
-        public IEnumerable<T> Entities { get; set; }
+        public IList<T> Entities { get; set; }
 
-        public Page(IEnumerable<T> entities, int count, int pageSize, int currentPage)
+        public Page(IList<T> entities, int count, int pageSize, int currentPage)
         {
             this.Entities = entities;
             this.Count = count;

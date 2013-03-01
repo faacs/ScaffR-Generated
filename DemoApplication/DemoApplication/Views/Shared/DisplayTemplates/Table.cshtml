@@ -1,0 +1,43 @@
+﻿@model System.Collections.IList
+
+@{
+    var properties = ModelMetadata.FromLambdaExpression(m => m[0], ViewData)
+                                  .Properties
+                                  .Where(metadata => ShouldShow(metadata, ViewData));
+}
+
+@functions{
+
+    bool ShouldShow(ModelMetadata metadata, ViewDataDictionary viewData)
+    {
+        return metadata.ShowForDisplay
+            && !metadata.IsComplexType
+            && !viewData.TemplateInfo.Visited(metadata);
+    }    
+}
+
+<table class="table">
+    <tr>
+        @foreach (var property in properties)
+        {
+            <th>@property.GetDisplayName()</th>
+        }
+    </tr>
+    
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        var itemMd = ModelMetadata.FromLambdaExpression(m => m[i], ViewData);
+        
+        <tr>
+            @foreach (var property in properties)
+            {
+                var propertyMetadata = itemMd.Properties.Single(m => m.PropertyName == property.PropertyName);
+                <td>                
+                    @Html.DisplayFor(m => propertyMetadata.Model)
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+

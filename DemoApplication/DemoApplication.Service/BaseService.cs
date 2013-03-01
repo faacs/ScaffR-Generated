@@ -3,12 +3,12 @@ namespace DemoApplication.Service
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DemoApplication.Core.Common.Validation;
-    using DemoApplication.Core.Interfaces.Data;
-    using DemoApplication.Core.Interfaces.Paging;
-    using DemoApplication.Core.Interfaces.Service;
-    using DemoApplication.Core.Interfaces.Validation;
-    using DemoApplication.Core.Model;
+    using Core.Common.Validation;
+    using Core.Interfaces.Data;
+    using Core.Interfaces.Paging;
+    using Core.Interfaces.Service;
+    using Core.Interfaces.Validation;
+    using Core.Model;
 
     /// <summary>
     /// Base for all services... If you need specific businesslogic

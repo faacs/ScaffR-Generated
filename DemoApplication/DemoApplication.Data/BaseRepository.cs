@@ -5,10 +5,10 @@ namespace DemoApplication.Data
     using System.Data;
     using System.Data.Entity;
     using System.Linq;
-    using DemoApplication.Core.Common.Paging;
-    using DemoApplication.Core.Interfaces.Data;
-    using DemoApplication.Core.Interfaces.Paging;
-    using DemoApplication.Core.Model;
+    using Core.Common.Paging;
+    using Core.Interfaces.Data;
+    using Core.Interfaces.Paging;
+    using Core.Model;
 
     /// <summary>
     /// An abstract baseclass handling basic CRUD operations against the context.
@@ -76,7 +76,7 @@ namespace DemoApplication.Data
         public IPage<T> Page(int page = 1, int pageSize = 10)
         {
             var internalPage = page - 1;
-            var data = this.Query.OrderByDescending(k => k.Created).Skip(pageSize * internalPage).Take(pageSize).AsEnumerable();
+            var data = this.Query.OrderByDescending(k => k.Created).Skip(pageSize * internalPage).Take(pageSize).ToList();
             return new Page<T>(data, this._dbset.Count(), pageSize, page);
         }
 

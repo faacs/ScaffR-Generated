@@ -1,0 +1,37 @@
+﻿@{
+    var steps = ViewData.ModelMetadata.Properties.Where(x => IsPropertyVisible(x) && IsPropertyWizardStep(x)).ToList();
+}
+
+@functions{
+
+    bool IsPropertyVisible(ModelMetadata metadata)
+    {
+        return !metadata.HideSurroundingHtml && metadata.ShowForEdit && !ViewData.TemplateInfo.Visited(metadata);
+    }
+
+    bool IsPropertyWizardStep(ModelMetadata metadata)
+    {
+        return metadata.AdditionalValues.ContainsKey("WizardStep");
+    }
+}
+
+<ul class="nav nav-tabs">
+    @for (int i = 0; i < steps.Count();i ++)
+    {
+        var step = steps[i];
+        
+        <li class="@(i == 0 ? "active" : "")"><a href="#@i">@step.GetDisplayName()</a></li>
+    }
+</ul>
+
+<div class="tab-content">
+    @for (int i = 0; i < steps.Count();i ++)
+    {
+        var step = steps[i];
+        
+        <div class="tab-pane @(i == 0 ? "active" : "")" id="@i">
+            @Html.Editor(step.PropertyName)
+        </div>
+}
+
+</div>

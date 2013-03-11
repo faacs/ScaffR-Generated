@@ -33,6 +33,6 @@ namespace DemoApplication.Controllers.Account
             }
 
             return RedirectToAction("Emails");
-        }    
+        }
     }
 }

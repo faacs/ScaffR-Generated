@@ -32,11 +32,23 @@ namespace DemoApplication.Controllers.Account
             var user = UserProfile.Current;
             
             user.PhotoId = photo[0].Id;
-            _userService.SaveOrUpdate(user);
+
+            /*_userService.SaveOrUpdate(user);
 
             TempData["Success"] = "Profile photo was successfully updated";
+            return RedirectToAction("Photo"); */
 
-            return RedirectToAction("Photo");
+            /* Update by William 03/11/2013 */
+
+            var result = user.Save();
+
+            if (ModelState.Process(result))
+            {
+                TempData["Success"] = "Profile photo was successfully updated";
+                return RedirectToAction("Photo");
+            }
+            return View();
+            /* **************************** */
         }
     }
 }

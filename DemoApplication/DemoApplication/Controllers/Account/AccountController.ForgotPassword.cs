@@ -6,7 +6,7 @@ namespace DemoApplication.Controllers.Account
     using Extensions;
     using Mailers;
     using Models;
-    using Models.Account;
+    using Models.Account;    
     using Mvc.Mailer;
 
     public partial class AccountController
@@ -38,7 +38,10 @@ namespace DemoApplication.Controllers.Account
 
                     try
                     {
-                        _userService.SaveOrUpdate(user);
+                        
+                        if (!ModelState.Process(_userService.SaveOrUpdate(user)))
+                            return View();                        
+
 
                         var loginUrl = Url.AbsoluteAction("Logon", "Account");
 

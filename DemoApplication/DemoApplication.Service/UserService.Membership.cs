@@ -3,7 +3,7 @@ namespace DemoApplication.Service
     using System;
     using System.Linq;
     using DemoApplication.Core.Common.Membership;
-    using DemoApplication.Core.Model;
+    using DemoApplication.Core.Model;    
 
     public partial class UserService
     {
@@ -29,6 +29,7 @@ namespace DemoApplication.Service
                 }
 
                 user.LastLoginDate = DateTime.UtcNow;
+                
                 SaveOrUpdate(user);
                 return AuthenticationStatus.Authenticated;
             }

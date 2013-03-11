@@ -8,6 +8,7 @@ namespace DemoApplication.Areas.Api.Controllers
     using System.Web.Http;
     using Core.Interfaces.Service;
     using Core.Model;
+    using Extensions;
 
     public abstract class ApiController<T> : ApiController where T : DomainObject
     {
@@ -40,11 +41,15 @@ namespace DemoApplication.Areas.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service.SaveOrUpdate(entity);
-                var response = new HttpResponseMessage(HttpStatusCode.Created);
-                string uri = Url.Link("DefaultApi", new { id = entity.Id });
-                response.Headers.Location = new Uri(uri);
-                return Get(entity.Id);    
+                var result = Service.SaveOrUpdate(entity);
+
+                if (ModelState.Process(result))
+                {
+                    var response = new HttpResponseMessage(HttpStatusCode.Created);
+                    string uri = Url.Link("DefaultApi", new { id = entity.Id });
+                    response.Headers.Location = new Uri(uri);
+                    return Get(entity.Id);    
+                }
             }
 
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);

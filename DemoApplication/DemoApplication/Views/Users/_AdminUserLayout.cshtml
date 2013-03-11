@@ -1,32 +1,46 @@
 @using DemoApplication.Extensions.Sitemap
-@using DemoApplication.Extensions
 @model DemoApplication.Models.Users.UserViewModel
 
 @{
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-<div class="page-header">
-    
-    <h2 class="pull-left">@Model.FullName</h2>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="page-header">
+            <h3 class="pull-left">@Model.FullName</h3>
 
-    @Html.MvcSiteMap().Pills(SiteMap.Provider.FindSiteMapNodeFromKey("UserDetails"), true, true)
+            @Html.MvcSiteMap().Pills(SiteMap.Provider.FindSiteMapNodeFromKey("UserDetails"), true, true)
+
+            <div class="btn-group pull-right">
+
+                <ul class="dropdown-menu">
+                    @if (Model.IsLockedOut)
+                    {
+                        <li><a href="#" id="lock-user"><i class="icon-lock"></i>Lock User</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="#" id="unlock-user"><i class="icon-unlock"></i>Unlock User</a></li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+        <div class="row-fluid">
+
+            <div class="span12">
+
+                @RenderBody()
+
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="btn-group pull-right">
-@*    <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">Action
-    <span class="caret"></span>
-    </a>*@
-    <ul class="dropdown-menu">
-        @if (Model.IsLockedOut)
-        {
-            <li><a href="#" id="lock-user"><i class="icon-lock"></i>Lock User</a></li>
-        }
-        else
-        {
-            <li><a href="#" id="unlock-user"><i class="icon-unlock"></i>Unlock User</a></li>
-        }
-    </ul>
-</div>
 
-@RenderBody()
+
+
+
+
+

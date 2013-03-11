@@ -3,6 +3,6 @@
 <ul class="nav nav-pills">
     @foreach (var node in Model.Nodes)
     {            
-        <li class="@Html.AddClass("active", node.IsCurrentNode || node.IsInCurrentPath && !node.IsRootNode)"><a href="@node.Url">@node.Title</a></li>            
+        <li class="@(node.IsCurrentNode ? "active" : "")"><a href="@node.Url">@node.Title</a></li>            
     }
 </ul>

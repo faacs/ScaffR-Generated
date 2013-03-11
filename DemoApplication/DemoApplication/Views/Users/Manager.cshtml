@@ -4,43 +4,52 @@
 }
 @model DemoApplication.Core.Interfaces.Paging.IPage<DemoApplication.Core.Model.User>
 
-<div class="page-header">
-<h2>Manage Users</h2>
-</div>
-    
-    
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Last Login</th>
-            <th>Approved</th>            
-            <th>Is Locked Out</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var user in Model.Entities)
-        {
-            <tr>
-                <td>
-                    <a href="@Url.Action("Details", "Users", new { id = user.Id })">@user.FullName</a>    
-                </td>
-                <td>
-                    @user.Username
-                </td>
-                <td>
-                    @user.LastLoginDate.GetValueOrDefault(DateTime.MinValue).ToLocalTime()
-                </td>
-                <td>
-                    @user.IsApproved
-                </td>
-                
-                <td>
-                    @user.IsLockedOut
-                </td>
-            </tr>
-        }
+<div class="row-fluid">
+    <div class="span12">
+        <div class="page-header">
+            <h3>Your Profile</h3>
+        </div>
+        <div class="row-fluid">
 
-    </tbody>
-</table>
+            <div class="span12">
+
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Last Login</th>
+                            <th>Approved</th>
+                            <th>Is Locked Out</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Entities)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("Details", "Users", new { id = user.Id })">@user.FullName</a>
+                                </td>
+                                <td>
+                                    @user.Username
+                                </td>
+                                <td>
+                                    @user.LastLoginDate.GetValueOrDefault(DateTime.MinValue).ToLocalTime()
+                                </td>
+                                <td>
+                                    @user.IsApproved
+                                </td>
+
+                                <td>
+                                    @user.IsLockedOut
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

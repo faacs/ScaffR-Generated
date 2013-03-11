@@ -2,6 +2,7 @@ namespace DemoApplication.Models.Account
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Metadata.Attributes;
 
     public partial class ProfileModel
     {
@@ -23,6 +24,7 @@ namespace DemoApplication.Models.Account
 
         [Required]
         [Display(Name = "Phone Number")]
+        [Textbox(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
     }
 }

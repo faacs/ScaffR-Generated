@@ -11,13 +11,25 @@
         [HttpGet]
         public ActionResult History(int id)
         {
-            return View(new UserViewModel());
+            var user = UserService.GetById(id);
+
+            var model = new UserViewModel();
+            model.InjectFrom<UnflatLoopValueInjection>(user);
+            model.Username = user.Username;
+
+            return View(model);
         }
 
         [HttpGet]
         public ActionResult Security(int id)
         {
-            return View(new UserViewModel());
+            var user = UserService.GetById(id);
+
+            var model = new UserViewModel();
+            model.InjectFrom<UnflatLoopValueInjection>(user);
+            model.Username = user.Username;
+
+            return View(model);
         }
 
         [HttpGet]

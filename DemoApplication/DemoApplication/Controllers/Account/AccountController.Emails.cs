@@ -7,6 +7,7 @@ namespace DemoApplication.Controllers.Account
     using System.Web.Mvc;
     using Core.Common.Profiles;
     using Core.Model;
+    using Extensions;
 
     public partial class AccountController
     {
@@ -27,12 +28,15 @@ namespace DemoApplication.Controllers.Account
         {
             model.UserId = UserProfile.Current.Id;
             if (ModelState.IsValid)
-            {
-                _userEmailService.SaveOrUpdate(model);
-                TempData["Success"] = "Email was successfully added";
+            {                
+                if (ModelState.Process(_userEmailService.SaveOrUpdate(model)))
+                {
+                    TempData["Success"] = "Email was successfully added";
+                    return RedirectToAction("Emails");
+                }             
             }
-
-            return RedirectToAction("Emails");
-        }    
+                        
+            return View();
+        }
     }
 }

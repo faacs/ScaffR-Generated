@@ -350,6 +350,7 @@
     <Content Include="Content\font\fontawesome-webfont.svg" />
     <Content Include="Content\images\bg-noise-s.jpg" />
     <Content Include="Content\images\generalFile.png" />
+    <Content Include="Content\images\icon-scaffr-20x20.png" />
     <Content Include="Content\images\Large\male.jpg" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\Medium\male.jpg" />

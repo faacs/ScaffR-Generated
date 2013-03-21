@@ -14,12 +14,13 @@ namespace DemoApplication.Core.Interfaces.Service
 
     using Common.Membership;
     using Model;
+    using Validation;
 
     #endregion
 
     public partial interface IUserService
     {
-        bool Authenticate(string username, string password, out AuthenticationStatus status, out User usr);
+        IValidationContainer<User> Authenticate(string username, string password);
         ChangePasswordStatus ChangePassword(User user, string currentPassword, string newPassword);
         CreateUserStatus CreateUser(User user);
         ChangePasswordStatus ResetPassword(User user);

@@ -28,13 +28,13 @@ namespace DemoApplication.Core.Interfaces.Membership
 
         bool RequireAccountVerification { get; set; }
 
+        bool RequireAccountApproval { get; set; }
+
         bool AllowLoginAfterAccountCreation { get; set; }
 
         int AccountLockoutFailedLoginAttempts { get; set; }
 
         TimeSpan AccountLockoutDuration { get; set; }
-
-        int AccountLockoutMinutes { get; set; }
 
         bool AllowAccountDeletion { get; set; }
 

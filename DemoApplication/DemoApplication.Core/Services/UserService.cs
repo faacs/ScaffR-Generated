@@ -13,20 +13,25 @@ namespace DemoApplication.Core.Services
     #region
 
     using Interfaces.Data;
+    using Interfaces.Eventing;
     using Interfaces.Membership;
     using Interfaces.Service;
     using Model;
 
     #endregion
 
-    public partial class UserService : BaseService<User>, IUserService
+    public partial class UserService : BaseService<User>, IUserService      
     {
-		protected new IUserRepository Repository;				
-		
-		public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IMembershipSettings membershipSettings)
+		protected new IUserRepository Repository;
+        private readonly IMembershipSettings _membershipSettings;
+        private IMessageBus _messageBus;
+
+        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IMembershipSettings membershipSettings, IMessageBus messageBus)
 			:base(unitOfWork)
-		{
-		    base.Repository = Repository = userRepository;
-		}		
-	}
+        {
+            _messageBus = messageBus;
+            _membershipSettings = membershipSettings;
+            base.Repository = Repository = userRepository;
+        }
+    }
 }

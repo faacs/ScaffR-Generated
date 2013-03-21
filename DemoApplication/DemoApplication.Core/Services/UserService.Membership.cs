@@ -13,62 +13,90 @@ namespace DemoApplication.Core.Services
     #region
 
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Common.Membership;
+    using Common.Membership.Events;
+    using Common.Validation;
+    using Extensions;
+    using Interfaces.Validation;
     using Model;
 
     #endregion
 
     public partial class UserService
     {
-        public bool Authenticate(string username, string password, out AuthenticationStatus status, out User usr)
+        public IValidationContainer<User> Authenticate(string username, string password)
         {
             var user = Find(u => u.Username == username).FirstOrDefault();
-            usr = null;
 
+            IList<string> errors = new List<string>();
+            IValidationContainer<User> result = new ValidationContainer<User>(new Dictionary<string, IList<string>>(), user); 
+            result.ValidationErrors.Add("", errors);
+            
             if (user == null)
             {
-                status = AuthenticationStatus.InvalidUsername;
-                return false;
+                errors.Add(AuthenticationStatus.InvalidUsername.GetDescription());
             }
-                        
-            if (user.Password == password)
+
+            // if user is locked out
+            if (user.IsLockedOut)
             {
-                if (user.IsLockedOut)
+                // check the lockout duration against the last lockout date
+                if (user.LastLockoutDate != null &&
+                    user.LastLockoutDate.Value + _membershipSettings.AccountLockoutDuration <= DateTime.UtcNow)
                 {
-                    status = AuthenticationStatus.UserLockedOut;
-                    return false;
+                    user.IsLockedOut = false;
                 }
-
-                if (!user.IsApproved)
+                else
                 {
-
-                    status = AuthenticationStatus.UserLockedOut;
-                    return false;
-                }
-
-                user.LastLoginDate = DateTime.UtcNow;
-                usr = user;
-                var result = SaveOrUpdate(user);
-
-                status = AuthenticationStatus.Authenticated;
-                return true;
+                    errors.Add(AuthenticationStatus.UserLockedOut.GetDescription()); 
+                }                               
             }
 
-            status = AuthenticationStatus.InvalidPassword;
-            return false;
+            // password match
+            if (user.Password == password || user.TemporaryPassword == password)
+            {                
+                // if user has not verified their account
+                if (!user.IsApproved && _membershipSettings.RequireAccountApproval)
+                    errors.Add(AuthenticationStatus.AccountNotApproved.GetDescription());
 
-            //if (user.TemporaryPassword == password)
-            //{
-            //    user.ResetPassword = true;
-            //    user.Password = user.TemporaryPassword;
-            //    SaveOrUpdate(user);
-            //    return AuthenticationStatus.ResetPassword;
-            //}
+                // if user is not approved
+                if (!user.IsVerified && _membershipSettings.RequireAccountVerification)
+                    errors.Add(AuthenticationStatus.EmailNotVerified.GetDescription());
 
-            //user.LastPasswordFailureDate = DateTime.UtcNow;
-            //SaveOrUpdate(user);
-            //return AuthenticationStatus.InvalidPassword;
+                if (!errors.Any())
+                {
+                    // if user is logging with a temporary password
+                    if (user.TemporaryPassword == password)
+                    {
+                        user.ResetPassword = true;
+                        user.TemporaryPassword = null;
+                        user.Password = user.TemporaryPassword;
+                    }
+
+                    user.PasswordFailuresSinceLastSuccess = 0;
+                    user.LastLoginDate = DateTime.UtcNow;
+                    return SaveOrUpdate(user);                    
+                }
+            }
+
+            // bad password
+            user.PasswordFailuresSinceLastSuccess++;
+            user.LastPasswordFailureDate = DateTime.UtcNow;
+
+            if (user.PasswordFailuresSinceLastSuccess >= _membershipSettings.AccountLockoutFailedLoginAttempts)
+            {
+                user.LastLockoutDate = DateTime.UtcNow;
+                user.IsLockedOut = true;
+
+                _messageBus.Publish(new UserLockedOut(user));
+
+                errors.Add(AuthenticationStatus.UserLockedOut.GetDescription());
+            }
+
+            result = SaveOrUpdate(user);
         }
 
         public ChangePasswordStatus ChangePassword(User user, string currentPassword, string newPassword)
@@ -77,7 +105,7 @@ namespace DemoApplication.Core.Services
             {
                 return ChangePasswordStatus.InvalidPassword;
             }
-            
+
             try
             {
                 user.ResetPassword = false;
@@ -89,7 +117,7 @@ namespace DemoApplication.Core.Services
             {
                 return ChangePasswordStatus.Failure;
             }
-            
+
             return ChangePasswordStatus.Success;
         }
 
@@ -107,7 +135,7 @@ namespace DemoApplication.Core.Services
 
             user.IsApproved = true;
             user.IsLockedOut = false;
-            
+
             SaveOrUpdate(user);
 
             return CreateUserStatus.Success;

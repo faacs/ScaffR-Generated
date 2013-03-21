@@ -31,6 +31,12 @@ namespace DemoApplication.Core.Common.Membership
         UserLockedOut,
 
         [Description("Your account is no longer active")]
-        AccountNotActive
+        AccountNotActive,
+
+        [Description("Your email address has not been verified")]
+        EmailNotVerified,
+
+        [Description("Your account is pending approval")]
+        AccountNotApproved
     }
 }

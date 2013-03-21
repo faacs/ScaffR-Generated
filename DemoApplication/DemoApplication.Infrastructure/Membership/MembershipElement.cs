@@ -55,6 +55,13 @@ namespace DemoApplication.Infrastructure.Membership
             set { this["requireAccountVerification"] = value; }
         }
 
+        [ConfigurationProperty("requireAccountApproval", DefaultValue = true)]
+        public bool RequireAccountApproval
+        {
+            get { return (bool)this["requireAccountApproval"]; }
+            set { this["requireAccountApproval"] = value; }
+        }
+
         [ConfigurationProperty("allowLoginAfterAccountCreation", DefaultValue = true)]
         public bool AllowLoginAfterAccountCreation
         {
